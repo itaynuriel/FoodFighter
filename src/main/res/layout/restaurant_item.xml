@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="20dp"
+    android:layout_margin="4dp"
+    android:elevation="8dp"
+    app:cardElevation="8dp"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/restaurant_IMG_poster"
+            android:layout_width="150dp"
+            android:layout_height="0dp"
+            android:layout_alignBottom="@id/restaurant_RTG_rating"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_launcher_background" />
+
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/restaurant_LBL_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="6dp"
+            android:layout_toStartOf="@id/restaurant_IMG_favorite"
+            android:layout_toEndOf="@id/restaurant_IMG_poster"
+            android:maxLines="2"
+            android:minLines="2"
+            android:text="Restaurant name"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/restaurant_LBL_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/restaurant_LBL_name"
+            android:layout_alignStart="@id/restaurant_LBL_name"
+            android:layout_marginTop="8dp"
+            android:maxLines="1"
+            android:minLines="1"
+            android:text="03-6412242"
+            android:textSize="16sp" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/restaurant_LBL_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/restaurant_LBL_number"
+            android:layout_alignStart="@id/restaurant_LBL_name"
+            android:layout_marginTop="8dp"
+            android:maxLines="1"
+            android:minLines="1"
+            android:text="Einstein st. 7"
+            android:textSize="16sp" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/restaurant_LBL_reviews"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/restaurant_LBL_address"
+            android:layout_alignStart="@id/restaurant_LBL_name"
+            android:layout_marginTop="8dp"
+            android:maxLines="1"
+            android:minLines="1"
+            android:text="1234 Reviews"
+            android:textSize="16sp" />
+
+        <androidx.appcompat.widget.AppCompatRatingBar
+            android:id="@+id/restaurant_RTG_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/restaurant_LBL_reviews"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="20dp"
+            android:contentDescription="@android:string/ok"
+            android:progressTint="@color/teal_200"
+            android:rating="4.5"
+            android:secondaryProgressTint="@color/purple_500"
+            android:stepSize="0.5" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/restaurant_IMG_favorite"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="6dp"
+            app:srcCompat="@drawable/like" />
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>
