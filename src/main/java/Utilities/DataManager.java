@@ -5,8 +5,13 @@ import java.util.ArrayList;
 import Models.Restaurant;
 
 public class DataManager {
+
+    public static ArrayList<Restaurant> restaurants = null;
     public static ArrayList<Restaurant> getRestaurants() {
-        ArrayList<Restaurant> restaurants = new ArrayList<>();
+        if (restaurants != null) {
+            return restaurants;
+        }
+        restaurants = new ArrayList<>();
 
         restaurants.add(new Restaurant()
                 .setName("The Showroom Bakehouse")
@@ -15,7 +20,6 @@ public class DataManager {
                 .setAddress("Levitan 4, Tel-aviv ")
                 .setRating(86)
                 .setReviews(194)
-                .setFavorite(true)
         );
 
         restaurants.add(new Restaurant()
@@ -57,7 +61,6 @@ public class DataManager {
                 .setAddress("Uri Buri - HaHagana St, Acre")
                 .setRating(87)
                 .setReviews(407)
-                .setFavorite(true)
         );
         restaurants.add(new Restaurant()
                 .setName("Roberg")
@@ -104,9 +107,8 @@ public class DataManager {
                 .setNumber(036414231)
                 .setImage("https://image.cnbcfm.com/api/v1/image/107180422-1674061950534-gettyimages-1285446341-dsc_2675_20201113110927535.jpeg?v=1680474077&w=929&h=523&vtcrop=y")
                 .setAddress("Eliahu Hakim 5, Tel-Aviv")
-                .setRating(81)
+                .setRating(86)
                 .setReviews(275)
-                .setFavorite(true)
         );
 
         restaurants.add(new Restaurant()
@@ -116,7 +118,6 @@ public class DataManager {
                 .setAddress("Ibn-Gabirol 52, Tel-Aviv")
                 .setRating(88)
                 .setReviews(274)
-                .setFavorite(true)
         );
 
         restaurants.add(new Restaurant()
@@ -213,7 +214,6 @@ public class DataManager {
                 .setAddress("Shlomo Ha-Melech 1, Tel-Aviv")
                 .setRating(75)
                 .setReviews(293)
-                .setFavorite(true)
         );
 
         restaurants.add(new Restaurant()
@@ -232,7 +232,6 @@ public class DataManager {
                 .setAddress("Rothschild Blvd 29, Tel-aviv ")
                 .setRating(63)
                 .setReviews(280)
-                .setFavorite(true)
         );
         restaurants.add(new Restaurant()
                 .setName("Teder")
@@ -265,7 +264,6 @@ public class DataManager {
                 .setAddress("Hata'arucha 23, Tel-aviv ")
                 .setRating(81)
                 .setReviews(203)
-                .setFavorite(true)
         );
         restaurants.add(new Restaurant()
                 .setName("Santa Caterina")
@@ -274,7 +272,6 @@ public class DataManager {
                 .setAddress("Har Sinai 2, Tel-aviv ")
                 .setRating(83)
                 .setReviews(407)
-                .setFavorite(true)
         );
         restaurants.add(new Restaurant()
                 .setName("Falafel Gabay")

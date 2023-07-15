@@ -1,5 +1,6 @@
 package com.example.food_fighter;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -10,6 +11,16 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import Adapter.RestaurantAdapter;
 import Interfaces.RestaurantCallBack;
@@ -58,6 +69,26 @@ public class restaurant_list extends AppCompatActivity {
             @Override
             public void favoriteClicked(Restaurant restaurant, int position) {
                 restaurant.setFavorite(!restaurant.isFavorite());
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                if (user == null)
+                    startActivity(new Intent(restaurant_list.this, LoginActivity.class));
+
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                Map<String, Object> data = new HashMap<>();
+                data.put(restaurant.getName(), restaurant.isFavorite());
+                db.collection("user-likes").document(user.getUid()).set(data, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(restaurant_list.this, "Liked", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                    }
+                });
+
+
                 main_LST_restaurants.getAdapter().notifyItemChanged(position);
             }
         });

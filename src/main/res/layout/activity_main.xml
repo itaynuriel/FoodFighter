@@ -81,5 +81,12 @@
 
 
     </LinearLayout>
+    <Button
+        android:id="@+id/logout_BTN"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="290dp"
+        android:layout_marginVertical="560dp"
+        android:text="LOG OUT"/>
 
 </RelativeLayout>

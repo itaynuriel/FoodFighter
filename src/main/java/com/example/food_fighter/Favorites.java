@@ -2,28 +2,27 @@ package com.example.food_fighter;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.ClipData;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import Adapter.RestaurantAdapter;
@@ -32,45 +31,27 @@ import Models.Restaurant;
 import Utilities.DataManager;
 import Utilities.SignalGenerator;
 
-public class restaurant_search extends AppCompatActivity {
+public class Favorites extends AppCompatActivity {
 
     private Button backBTN;
+    private RestaurantAdapter restaurantAdapter = null;
 
-    private RestaurantAdapter restaurantAdapter;
-    private List<Restaurant> restaurantList;
-    private SearchView searchView;
     private RecyclerView main_LST_restaurants;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_restaurant_search);
+        setContentView(R.layout.activity_restaurant_list);
+
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null)
-            startActivity(new Intent(restaurant_search.this, LoginActivity.class));
+            startActivity(new Intent(Favorites.this, LoginActivity.class));
 
-        searchView = findViewById(R.id.searchView);
-        searchView.clearFocus();
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                restaurantAdapter.setFilteredList(filterList(query));
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
-
-        restaurantList = DataManager.getRestaurants();
-        backBTN= findViewById(R.id.back_Button_of_search);
+        backBTN= findViewById(R.id.back_Button_of_list);
         backBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(restaurant_search.this, MainActivity.class);
+                Intent intent = new Intent(Favorites.this, MainActivity.class);
                 startActivity(intent);
                 finish();
             }
@@ -80,22 +61,43 @@ public class restaurant_search extends AppCompatActivity {
         initViews();
     }
 
-    public ArrayList<Restaurant> filterList(String text) {
-        ArrayList<Restaurant> filteredList = new ArrayList<>();
-        filteredList.clear();
-        for(Restaurant restaurant : restaurantList)
-        {
-            if(restaurant.getName().toLowerCase().contains(text.toLowerCase()))
-                filteredList.add(restaurant);
-        }
-        if(filteredList.isEmpty()){
-            Toast.makeText(this, "NO SUCH RESTAURANT :( ", Toast.LENGTH_SHORT).show();
-        }
-        return filteredList;
-    }
-
     private void initViews() {
-        restaurantAdapter = new RestaurantAdapter(DataManager.getRestaurants());
+        ArrayList<Restaurant> favorite = new ArrayList<>();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null)
+            startActivity(new Intent(Favorites.this, LoginActivity.class));
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("user-likes").document(user.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Map<String, Object> userLikes = document.getData();
+                        for (Restaurant restaurant : DataManager.getRestaurants()) {
+                            if (userLikes.containsKey(restaurant.getName())) {
+                                if ((boolean) userLikes.get(restaurant.getName())) {
+                                    favorite.add(restaurant);
+                                }
+                            }
+                        }
+                        restaurantAdapter.setFilteredList(favorite);
+//                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                    } else {
+//                        Log.d(TAG, "No such document");
+                    }
+                } else {
+//                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+
+
+
+
+
+        restaurantAdapter = new RestaurantAdapter(favorite);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
         main_LST_restaurants.setLayoutManager(linearLayoutManager);
@@ -111,7 +113,7 @@ public class restaurant_search extends AppCompatActivity {
                 restaurant.setFavorite(!restaurant.isFavorite());
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 if (user == null)
-                    startActivity(new Intent(restaurant_search.this, LoginActivity.class));
+                    startActivity(new Intent(Favorites.this, LoginActivity.class));
 
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                 Map<String, Object> data = new HashMap<>();
@@ -119,7 +121,7 @@ public class restaurant_search extends AppCompatActivity {
                 db.collection("user-likes").document(user.getUid()).set(data, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                Toast.makeText(restaurant_search.this, "Liked", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(Favorites.this, "Liked", Toast.LENGTH_SHORT).show();
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
